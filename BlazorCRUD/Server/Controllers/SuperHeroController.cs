@@ -21,14 +21,16 @@ namespace BlazorCRUD.Server.Controllers
                 FirstName = "Peter",
                 LastName = "Parker",
                 HeroName = "Spiderman",
-                Comic = comics[0]
+                Comic = comics[0],
+                ComicId =1,
             },
              new SuperHero {
                 Id = 2,
                 FirstName = "Bruce",
                 LastName = "Wayne",
                 HeroName = "Batman",
-                Comic = comics[1]
+                Comic = comics[1],
+                ComicId = 2
             },
         };
 
@@ -38,12 +40,17 @@ namespace BlazorCRUD.Server.Controllers
             return Ok(superHeroes);
         }
 
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<ActionResult<SuperHero>> GetSuperHero(int id)
+        [HttpGet("comics")]
+        public async Task<ActionResult<List<Comic>>> GetComics()
+        {
+            return Ok(comics);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<SuperHero>> GetSuperHero(int? id)
         {
             var hero = superHeroes.FirstOrDefault(u => u.Id == id);
-            if(hero == null)
+            if (hero == null)
             {
                 return NotFound("Sorry No Hero");
             }

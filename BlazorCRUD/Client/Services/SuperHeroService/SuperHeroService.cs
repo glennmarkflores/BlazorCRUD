@@ -15,12 +15,14 @@ namespace BlazorCRUD.Client.Services.SuperHeroService
             _http = http;
         }
 
-        public Task GetComics()
+        public async Task GetComics()
         {
-            throw new NotImplementedException();
+            var result = await _http.GetFromJsonAsync<List<Comic>>("api/superhero/comics");
+            if (result != null)
+                Comics = result;
         }
 
-        public async Task<SuperHero> GetSingleHero(int id)
+        public async Task<SuperHero> GetSingleHero(int? id)
         {
             var result = await _http.GetFromJsonAsync<SuperHero>($"api/superhero/{id}");
             if (result != null)

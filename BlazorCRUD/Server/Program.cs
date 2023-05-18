@@ -1,4 +1,8 @@
+global using Microsoft.EntityFrameworkCore;
+global using BlazorCRUD.Shared;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.Options;
+using BlazorCRUD.Server.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
+    builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 

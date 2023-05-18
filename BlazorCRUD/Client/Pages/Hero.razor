@@ -11,35 +11,36 @@
 else
 {
     <PageTitle>Edit @hero.HeroName</PageTitle>
+    <button type="button" class="btn btn-danger" @onclick="DeleteHero">Delete</button>
     <h3>Edit @hero.HeroName</h3>
-
-    <EditForm Model="hero" OnSubmit="HandleSubmit">
-        <div>
-            <label for="firstname">First Name</label>
-            <InputText id="firstname" @bind-Value="hero.FirstName" class="form-control"></InputText>
-        </div>
-        <div>
-            <label for="firstname">Last Name</label>
-            <InputText id="lastname" @bind-Value="hero.LastName" class="form-control"></InputText>
-        </div>
-        <div>
-            <label for="firstname">Hero Name</label>
-            <InputText id="heroname" @bind-Value="hero.HeroName" class="form-control"></InputText>
-        </div>
-        <div>
-            <label>Comic</label>
-            <InputSelect @bind-Value="hero.ComicId" class="form-select">
-                @foreach (var comic in SuperHeroService.Comics)
-                {
-                    <option value="@comic.Id">@comic.Name</option>
-                }
-            </InputSelect>
-        </div>
-        <button type="submit" class="btn btn-primary">@btnText</button>
-    </EditForm>
-
-
 }
+<EditForm Model="hero" OnSubmit="HandleSubmit">
+    <div>
+        <label for="firstname">First Name</label>
+        <InputText id="firstname" @bind-Value="hero.FirstName" class="form-control"></InputText>
+    </div>
+    <div>
+        <label for="firstname">Last Name</label>
+        <InputText id="lastname" @bind-Value="hero.LastName" class="form-control"></InputText>
+    </div>
+    <div>
+        <label for="firstname">Hero Name</label>
+        <InputText id="heroname" @bind-Value="hero.HeroName" class="form-control"></InputText>
+    </div>
+    <div>
+        <label>Comic</label>
+        <InputSelect @bind-Value="hero.ComicId" class="form-select">
+            @foreach (var comic in SuperHeroService.Comics)
+            {
+                <option value="@comic.Id">@comic.Name</option>
+            }
+        </InputSelect>
+    </div>
+    <button type="submit" class="btn btn-primary">@btnText</button>
+
+
+</EditForm>
+
 
 @code {
     [Parameter]
@@ -59,6 +60,8 @@ else
         if (Id == null)
         {
             // Create new Hero
+            hero.Comic = SuperHeroService.Comics[0];
+            hero.ComicId = hero.Comic.Id;
         }
         else
         {
@@ -68,7 +71,19 @@ else
 
     async Task HandleSubmit()
     {
+        if (Id == null)
+        {
+            await SuperHeroService.CreateHero(hero);
+        }
+        else
+        {
+            await SuperHeroService.UpdateHero(hero);
+        }
+    }
 
+    async Task DeleteHero()
+    {
+        await SuperHeroService.DeleteHero(hero.Id);
     }
 
 
